@@ -21,6 +21,47 @@ export const sidebarLinks = [
   },
 ];
 
+export const formFieldsSignUp = [
+  { 
+    name: "email",
+    placeholder: "Please enter your email", 
+    label: "Email" 
+  },
+  { 
+    name: "password",
+    placeholder: "Please enter your password", 
+    label: "Password" 
+  },
+  { 
+    name: "firstName",
+    placeholder: "Please enter your first name", 
+    label: "First Name" 
+  },
+  { 
+    name: "lastName",
+    placeholder: "Please enter your last name", 
+    label: "Last Name" 
+  },
+  { 
+    name: "address",
+    placeholder: "Please enter your address", 
+    label: "Address" 
+  }
+]
+
+export const formFieldsSignIn = [
+  { 
+    name: "email",
+    placeholder: "Please enter your account email", 
+    label: "Email" 
+  },
+  { 
+    name: "password",
+    placeholder: "Please enter your password", 
+    label: "Password" 
+  }
+]
+
 // good_user / good_password - Bank of America
 export const TEST_USER_ID = "6627ed3d00267aa6fa3e";
 

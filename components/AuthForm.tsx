@@ -1,9 +1,9 @@
 'use client'
-
+import {formFieldsSignUp, formFieldsSignIn} from '@/constants'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import {z} from "zod"
+import {any, z} from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
@@ -17,32 +17,26 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-
-
-const formSchema = z.object({
-    username: z.string().min(2, {
-      message: "Username must be at least 2 characters.",
-    }),
-    email: z.string().email()
-})
-   
+import CustomFormFieldInput from './CustomFormFieldInput'
+import { authFormSchema } from '@/lib/utils'
+import { Loader2 } from 'lucide-react'
+ 
 
 const AuthForm = ({type} : {type : string}) => {
 
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(false)
   
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      email:""
-    },
+  const form = useForm<z.infer<typeof authFormSchema>>({
+    resolver: zodResolver(authFormSchema)
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof authFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    setIsLoading(true) 
     console.log(values)
+    setIsLoading(false)
   }
 
   return ( 
@@ -55,40 +49,75 @@ const AuthForm = ({type} : {type : string}) => {
             
             <div className="flex flex-col gap-1 md:gap-3">
                 <h1 className="text-24 lg:text-36 font-semibold text-gray-900">
-                   {user ? 'Link Account' : type === 'sign-in' ? 'Sign-in' : 'Sign-up'}
+                   {user ? 'Sign in' : type === 'sign-in' ? 'Sign-in' : 'Sign-up'}
                    <p className='text-16 font-normal text-gray-600'>
                       {user ? 'Link you account to get started.' : 'Please enter your details.'}
                    </p>
                 </h1>
             </div>
         </header>
+        
         {user ? 
-        (
-            <div className="flex flex-col gap-4">
-
-            </div>
-        )    : 
-        (
-            <Form {...form}>
+        ( 
+          /*Sign In Form*/
+          <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <div className='form-item'>
-                    <FormLabel className='form-label'>Email</FormLabel>
-                    <div className='flex flex-col w-full'>
-                        <FormControl>
-                            <Input className='input-class' placeholder='Enter your email.' {...field}/>
-                        </FormControl>
-                        <FormMessage className='form-message mt-1'>
+              {
+                /*Form fields for signUp */
+                formFieldsSignIn.map((field) => {
+                  return ( 
+                    <CustomFormFieldInput 
+                      control = {form.control} 
+                      name={field.name}
+                      placeholder={field.placeholder} 
+                      label={field.label} 
+                    /> 
+                  )
+                }) 
+              }
 
-                        </FormMessage>
-                    </div>
-                  </div>
-                )}
-              />
-              <Button type="submit">Submit</Button>
+              {/*Submit form button with loading*/}
+              <Button type="submit" className='form-btn' disabled={isLoading}>
+                {
+                  isLoading ?  
+                      <> <Loader2 size={20} className='animate-spin'/> &nbsp; Loading... </>                
+                  :
+                      type === 'sign-in' ? 'Sign In' : 'Sign Up'
+                }
+              </Button>
+
+            </form>
+          </Form>
+        )    
+        : 
+        (
+          /*Sign Up Form*/
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              {
+                /*Form fields for signUp */
+                formFieldsSignUp.map((field) => {
+                  return ( 
+                    <CustomFormFieldInput 
+                      control = {form.control}
+                      name={field.name}
+                      placeholder={field.placeholder} 
+                      label={field.label} 
+                    /> 
+                  )
+                }) 
+              }
+
+              {/*Submit form button with loading*/}
+              <Button type="submit" className='form-btn' disabled={isLoading}>
+                {
+                  isLoading ?  
+                      <> <Loader2 size={20} className='animate-spin'/> &nbsp; Loading... </>                
+                  :
+                      type === 'sign-in' ? 'Sign In' : 'Sign Up'
+                }
+              </Button>
+
             </form>
           </Form>
         ) 
