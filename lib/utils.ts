@@ -199,12 +199,19 @@ export const getTransactionStatus = (date: Date) => {
 
 
 /* Schema with validations*/
-export const authFormSchema = z.object({
+export const authFormSchema = (type: string) => z.object({
+  firstName:   type === 'sing-in' ? z.string().optional() : z.string().min(3),
+  lastName:    type === 'sing-in' ? z.string().optional() : z.string().min(3),
+  address:     type === 'sing-in' ? z.string().optional() : z.string().max(50),
+  state:       type === 'sing-in' ? z.string().optional() : z.string().min(2).max(2),
+  postalCode:  type === 'sing-in' ? z.string().optional() : z.string().min(3).max(6),
+  dateOfBirth: type === 'sing-in' ? z.string().optional() : z.string().min(3),
+  ssn:         type === 'sing-in' ? z.string().optional() : z.string().min(3),
+  
   email: z.string().email(),
-  password: z.string().min(1),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  address: z.string().min(1)
+  password: z.string().min(8, {
+    message: "Password must contain at least 8 characters."
+  }),
 
   /*lastName: z.string().min(2, {
     message: "Last Name must be at least 2 characters.",

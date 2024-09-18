@@ -25,27 +25,56 @@ export const formFieldsSignUp = [
   { 
     name: "email",
     placeholder: "Please enter your email", 
-    label: "Email" 
+    label: "Email",
+    fieldClassName:""
   },
   { 
     name: "password",
     placeholder: "Please enter your password", 
-    label: "Password" 
+    label: "Password",
+    fieldClassName:"" 
   },
   { 
     name: "firstName",
     placeholder: "Please enter your first name", 
-    label: "First Name" 
+    label: "First Name",
+    fieldClassName:"firstName"
   },
   { 
     name: "lastName",
     placeholder: "Please enter your last name", 
-    label: "Last Name" 
+    label: "Last Name",
+    fieldClassName:"lastName"
   },
   { 
     name: "address",
-    placeholder: "Please enter your address", 
-    label: "Address" 
+    placeholder: "Address", 
+    label: "Address" ,
+    fieldClassName:"" 
+  },
+  { 
+    name: "state",
+    placeholder: "State", 
+    label: "State" ,
+    fieldClassName:"" 
+  },
+  { 
+    name: "postalCode",
+    placeholder: "Postal Code", 
+    label: "Postal Code" ,
+    fieldClassName:"" 
+  },
+  { 
+    name: "dateOfBirth",
+    placeholder: "YYYY-MM-DD", 
+    label: "Date of Birth" ,
+    fieldClassName:"" 
+  },
+  { 
+    name: "ssn",
+    placeholder: "SSN", 
+    label: "SSN" ,
+    fieldClassName:"" 
   }
 ]
 
@@ -53,12 +82,14 @@ export const formFieldsSignIn = [
   { 
     name: "email",
     placeholder: "Please enter your account email", 
-    label: "Email" 
+    label: "Email",
+    fieldClassName: ""
   },
   { 
     name: "password",
     placeholder: "Please enter your password", 
-    label: "Password" 
+    label: "Password",
+    fieldClassName:""
   }
 ]
 

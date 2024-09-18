@@ -24,14 +24,14 @@ import { Loader2 } from 'lucide-react'
 
 const AuthForm = ({type} : {type : string}) => {
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({name:"aa"});
   const [isLoading, setIsLoading] = useState(false)
-  
-  const form = useForm<z.infer<typeof authFormSchema>>({
-    resolver: zodResolver(authFormSchema)
-  })
+  const formSchema = authFormSchema(type);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema)
+  }) 
 
-  function onSubmit(values: z.infer<typeof authFormSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setIsLoading(true) 
@@ -57,34 +57,37 @@ const AuthForm = ({type} : {type : string}) => {
             </div>
         </header>
         
-        {user ? 
+        {user && type === 'sign-in' ? 
         ( 
           /*Sign In Form*/
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               {
-                /*Form fields for signUp */
+                /*Form fields for signin */
                 formFieldsSignIn.map((field) => {
                   return ( 
                     <CustomFormFieldInput 
                       control = {form.control} 
                       name={field.name}
                       placeholder={field.placeholder} 
-                      label={field.label} 
+                      label={field.label}
+                      fieldClassName={field.fieldClassName} 
                     /> 
                   )
                 }) 
               }
 
               {/*Submit form button with loading*/}
-              <Button type="submit" className='form-btn' disabled={isLoading}>
-                {
-                  isLoading ?  
-                      <> <Loader2 size={20} className='animate-spin'/> &nbsp; Loading... </>                
-                  :
-                      type === 'sign-in' ? 'Sign In' : 'Sign Up'
-                }
-              </Button>
+              <div className="flex-col flex gap-4">
+                <Button type="submit" className='form-btn' disabled={isLoading}>
+                  {
+                    isLoading ?  
+                        <> <Loader2 size={20} className='animate-spin'/> &nbsp; Loading... </>                
+                    :
+                        type === 'sign-in' ? 'Sign In' : 'Sign Up'
+                  }
+                </Button>
+              </div>
 
             </form>
           </Form>
@@ -102,26 +105,38 @@ const AuthForm = ({type} : {type : string}) => {
                       control = {form.control}
                       name={field.name}
                       placeholder={field.placeholder} 
-                      label={field.label} 
+                      label={field.label}
+                      fieldClassName={field.fieldClassName} 
                     /> 
                   )
                 }) 
               }
 
               {/*Submit form button with loading*/}
-              <Button type="submit" className='form-btn' disabled={isLoading}>
-                {
-                  isLoading ?  
-                      <> <Loader2 size={20} className='animate-spin'/> &nbsp; Loading... </>                
-                  :
-                      type === 'sign-in' ? 'Sign In' : 'Sign Up'
-                }
-              </Button>
+              <div className="flex-col flex gap-4">
+                <Button type="submit" className='form-btn' disabled={isLoading}>
+                  {
+                    isLoading ?  
+                        <> <Loader2 size={20} className='animate-spin'/> &nbsp; Loading... </>                
+                    :
+                        type === 'sign-in' ? 'Sign In' : 'Sign Up'
+                  }
+                </Button>
+              </div>
 
             </form>
           </Form>
         ) 
-    }
+        }
+        <footer className='flex justify-center gap-1'>
+          <p className='text-14 font-normal text-gray-500'>
+            {type === 'sign-in' ? "Don't have an account? " : "Already have an account?  "}
+            <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'} className='form-link'>
+              {type === 'sign-in' ? 'Create account' : 'Sign in'}
+            </Link>
+          </p>
+        </footer>
+   
     </section>
   )
 }

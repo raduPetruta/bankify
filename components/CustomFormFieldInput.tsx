@@ -3,16 +3,20 @@ import { FormControl, FormField, FormLabel, FormMessage } from './ui/form'
 import { Input } from './ui/input'
 import { Control, Form } from 'react-hook-form'
 import { z } from 'zod'
-import { authFormSchema } from '@/lib/utils'
+import { authFormSchema, cn } from '@/lib/utils'
+
+
+const formSchema = authFormSchema('sign-up');
 
 interface ICustomFormFieldInput {
-    control: Control<z.infer<typeof authFormSchema>>,
+    control: Control<z.infer<typeof formSchema>>,
     name: any,
     placeholder: string,
-    label: string
+    label: string,
+    fieldClassName: string
 }
 
-const CustomFormFieldInput = ({control, name, placeholder, label} : ICustomFormFieldInput) => {
+const CustomFormFieldInput = ({control, name, placeholder, label, fieldClassName} : ICustomFormFieldInput) => {
   return (
     <FormField
         control={control}
@@ -20,7 +24,7 @@ const CustomFormFieldInput = ({control, name, placeholder, label} : ICustomFormF
         render={({ field }) => (
             <div className='form-item'>
             <FormLabel className='form-label'>{label}</FormLabel>
-            <div className='flex flex-col w-full'>
+            <div className={cn('flex flex-col w-full', {'flex gap-4' : fieldClassName.length > 0} )}>
                 <FormControl>
                     <Input className='input-class' placeholder={placeholder} {...field} type={name}/>
                 </FormControl>
