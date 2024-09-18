@@ -75,6 +75,12 @@ export const formFieldsSignUp = [
     placeholder: "SSN", 
     label: "SSN" ,
     fieldClassName:"" 
+  },
+  { 
+    name: "city",
+    placeholder: "City", 
+    label: "City" ,
+    fieldClassName:"" 
   }
 ]
 

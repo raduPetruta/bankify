@@ -16,14 +16,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import CustomFormFieldInput from './CustomFormFieldInput'
 import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
+import SignUp from '@/app/(auth)/sign-up/page'
+import { useRouter } from 'next/navigation'
+import { signIn, signUp } from '@/lib/actions/user.actions'
  
 
 const AuthForm = ({type} : {type : string}) => {
-
+  
+  const router = useRouter();
   const [user, setUser] = useState({name:"aa"});
   const [isLoading, setIsLoading] = useState(false)
   const formSchema = authFormSchema(type);
@@ -31,12 +34,53 @@ const AuthForm = ({type} : {type : string}) => {
     resolver: zodResolver(formSchema)
   }) 
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const onSubmit = async (formValues: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     setIsLoading(true) 
-    console.log(values)
-    setIsLoading(false)
+
+    try {
+      //Sign up with Appwrite
+      //Create Plaid token
+      
+      //handle sign up
+      if(type === 'sign-up'){
+        
+        const userData = {
+          firstName: formValues.firstName,
+          lastName: formValues.lastName,
+          email: formValues.email,
+          password: formValues.password,
+          address: formValues.address,
+          ssn: formValues.ssn,
+          dateOfBirth: formValues.dateOfBirth, 
+          city: formValues.city         
+        }
+       
+        const newUser = await signUp(formValues);
+        setUser(newUser);
+      }
+
+      //handle sign in
+      if(type === 'sign-in') {
+        
+        const userDataResponse = await signIn ({
+          email: formValues.email,
+          password: formValues.password,
+        });
+        
+        if(userDataResponse)
+          router.push("/")
+      }
+    } 
+    catch (error) {
+      console.log(error)
+    } 
+    finally {
+      setIsLoading(false)
+    }
+
+    console.log(formValues)
   }
 
   return ( 
