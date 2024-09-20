@@ -3,11 +3,19 @@ import HeaderBox from '@/components/HeaderBox'
 import { title } from 'process'
 import React from 'react'
 import RightSidebar from '@/components/RightSidebar'
+ import { redirect } from "next/navigation";
+import { getLoggedInUser } from '@/lib/actions/user.actions'
 
-const Home = () => {
 
-  const loggedInUser = {firstName : "Radu", lastName:"Petruta", title:"Welcome,", type: "greeting", email:"radupetruta@gmail.com", subtext: "Access and manage your account efficiently!"}  
 
+const Home = async () => {
+
+  const loggedInUser = {firstName : "Radu", lastName:"Petruta", title:"Welcome,", type: "greeting", email:"radupetruta@gmail.com", subtext: "Access and manage your account efficiently!"}
+  
+  const user = await getLoggedInUser();
+  if (!user) 
+    redirect("/signup");
+  
   return (
     <section className='home'>
         <div className="home-content">

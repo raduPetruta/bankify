@@ -21,13 +21,14 @@ import { authFormSchema } from '@/lib/utils'
 import { Loader2 } from 'lucide-react'
 import SignUp from '@/app/(auth)/sign-up/page'
 import { useRouter } from 'next/navigation'
-import { signIn, signUp } from '@/lib/actions/user.actions'
+import { getLoggedInUser, signIn, signUp } from '@/lib/actions/user.actions'
  
 
 const AuthForm = ({type} : {type : string}) => {
   
   const router = useRouter();
-  const [user, setUser] = useState({name:"aa"});
+  const [user, setUser] = useState(null);
+  
   const [isLoading, setIsLoading] = useState(false)
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -36,39 +37,41 @@ const AuthForm = ({type} : {type : string}) => {
 
   const onSubmit = async (formValues: z.infer<typeof formSchema>) => {
     // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     setIsLoading(true) 
 
-    try {
-      //Sign up with Appwrite
-      //Create Plaid token
+    try { //sign up with Appwrite
       
       //handle sign up
-      if(type === 'sign-up'){
-        
+      if(type === 'sign-up'){ 
         const userData = {
-          firstName: formValues.firstName,
-          lastName: formValues.lastName,
+          firstName: formValues.firstName!,
+          lastName: formValues.lastName!,
+          address: formValues.address!,
+          city: formValues.city!,
+          state: formValues.state!,
+          postalCode: formValues.postalCode!,
+          dateOfBirth: formValues.dateOfBirth!,
+          ssn: formValues.ssn!,
           email: formValues.email,
           password: formValues.password,
-          address: formValues.address,
-          ssn: formValues.ssn,
-          dateOfBirth: formValues.dateOfBirth, 
-          city: formValues.city         
+          dwollaCustomerUrl: "dwolla",
+          dwollaCustomerId: "dwolla"
         }
-       
-        const newUser = await signUp(formValues);
+
+        const newUser = await signUp(userData);
         setUser(newUser);
+        
+        if(user)
+          router.push("/")
       }
 
       //handle sign in
       if(type === 'sign-in') {
-        
-        const userDataResponse = await signIn ({
+        const userData = {
           email: formValues.email,
           password: formValues.password,
-        });
-        
+        }
+        const userDataResponse = await signIn(userData);
         if(userDataResponse)
           router.push("/")
       }
@@ -101,7 +104,7 @@ const AuthForm = ({type} : {type : string}) => {
             </div>
         </header>
         
-        {user && type === 'sign-in' ? 
+        {type === 'sign-in' ? 
         ( 
           /*Sign In Form*/
           <Form {...form}>
